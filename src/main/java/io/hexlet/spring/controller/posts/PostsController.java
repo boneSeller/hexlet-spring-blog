@@ -1,4 +1,4 @@
-package io.hexlet.spring;
+package io.hexlet.spring.controller.posts;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/posts")
-public class PostController {
+public class PostsController {
 
     private final List<Post> posts = new ArrayList<>();
 

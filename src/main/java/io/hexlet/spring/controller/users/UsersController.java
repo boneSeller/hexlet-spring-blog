@@ -1,4 +1,4 @@
-package io.hexlet.spring;
+package io.hexlet.spring.controller.users;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
+public class UsersController {
 
     private final List<User> users = new ArrayList<>();
 

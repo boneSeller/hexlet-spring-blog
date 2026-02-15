@@ -1,0 +1,14 @@
+spring:
+  jpa:
+    show-sql: true
+
+output:
+  ansi:
+    enabled: always
+
+logging:
+  patter:
+    dateformat: "yyyy-MM-dd HH:mm:ss"
+
+app:
+  welcome-message: "Welcome to Spring blog!"
