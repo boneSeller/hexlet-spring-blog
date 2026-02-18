@@ -1,11 +1,12 @@
 package io.hexlet.spring.controller.posts;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 import io.hexlet.spring.model.Post;
+import io.hexlet.spring.repository.PostRepository;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,39 +21,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/posts")
 public class PostsController {
 
-    private final List<Post> posts = new ArrayList<>();
+    @Autowired
+    private PostRepository postRepository;
 
     @GetMapping
     public ResponseEntity<List<Post>> getPosts() {
-        return ResponseEntity.ok().body(posts);
+        return ResponseEntity.ok().body(postRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getPost(@PathVariable Integer id) {
-        var filteredPost = posts.stream().filter(post -> post.getId().equals(id)).findFirst();
-        if (filteredPost.isEmpty()) {
+    public ResponseEntity<Post> getPost(@PathVariable Long id) {
+        var post = postRepository.findById(id);
+        if (post.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.of(filteredPost);
+        return ResponseEntity.of(post);
     }
 
     @PostMapping
     public ResponseEntity<Post> create(@Valid @RequestBody Post post) {
-        var id = posts.size() + 1;
-        post.setId(id);
-        posts.add(post);
+        postRepository.save(post);
         return ResponseEntity.created(URI.create("/posts")).body(post);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> update(@PathVariable Integer id, @RequestBody Post data) {
-        var maybePost = posts.stream().filter(post -> post.getId().equals(id)).findFirst();
+    public ResponseEntity<Post> update(@PathVariable Long id, @RequestBody Post data) {
+        var maybePost = postRepository.findById(id);
         if (maybePost.isPresent()) {
             var post = maybePost.get();
-            post.setAuthor(data.getAuthor());
             post.setTitle(data.getTitle());
             post.setContent(data.getContent());
-            post.setCreatedAt(data.getCreatedAt());
+            post.setPublished(data.getPublished());
+            postRepository.save(post);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -60,8 +60,8 @@ public class PostsController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        posts.removeIf(post -> post.getId().equals(id));
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        postRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,22 +1,22 @@
 package io.hexlet.spring.model;
 
-import java.time.LocalDateTime;
-
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @Getter
 @Setter
+@Entity
 public class Post {
 
-    private Integer id;
-    @NotNull
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private Long id;
     private String title;
-    @NotNull
     private String content;
-    private String author;
-    private LocalDateTime createdAt;
+    private Boolean published;
 }
